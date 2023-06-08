@@ -41,8 +41,8 @@ class Predmeti(models.Model):
     izborni = models.CharField(max_length=50, choices=IZBORNI)
     nositelj = models.ForeignKey(Korisnik, on_delete=models.SET_NULL, blank=True, null=True, related_name='nositelj')
 
-    def str(self):
-        return '%s %s %s' % (self.name, self.izborni, self.nositelj)
+    def __str__(self):
+        return '%s %s' % (self.name, self.izborni)
 
 class Upisi(models.Model):
     studentId = models.ForeignKey(Korisnik, on_delete=models.CASCADE, blank=True, null=True, related_name='student')
