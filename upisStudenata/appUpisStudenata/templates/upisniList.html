@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Upisni List</h1>
+<ul>
+  {% for predmet in predmeti_list %}
+    <li>
+      {{ predmet.name }} - {{ predmet.izborni }}
+      {% if predmet.id in enrolled_predmeti %}
+        (Enrolled)
+      {% else %}
+        (Not Enrolled)
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No predmeti available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

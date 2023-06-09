@@ -16,7 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from appUpisStudenata.views import Login, UpisniListView
+from django.contrib.auth.views import LogoutView
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('login/', Login.as_view(), name='login'),
+      path('upisni-list/', UpisniListView.as_view(), name='upisniList'),
+      path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
 ]

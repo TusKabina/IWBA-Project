@@ -1,0 +1,29 @@
+<!-- base.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moodle</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                {% if user.role.role == 'STUDENT' %}
+                <li><a href="/logout">Logout</a></li>
+                {% elif user.role.role == 'PROFESSOR' %}
+                    
+                <li><a href="/logout">Logout</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

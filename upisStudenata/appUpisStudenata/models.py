@@ -18,8 +18,8 @@ class Role(models.Model):
 
     role = models.CharField(choices=ROLE_CHOICES, max_length=50)
 
-    """ def __str__(self):
-        return '%s %s' % (self.user.username, self.role) """
+    def __str__(self):
+        return '%s' % (self.role)
 
 
 class Korisnik(AbstractUser):
@@ -43,6 +43,8 @@ class Predmeti(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.name, self.izborni)
+
+
 
 class Upisi(models.Model):
     studentId = models.ForeignKey(Korisnik, on_delete=models.CASCADE, blank=True, null=True, related_name='student')
