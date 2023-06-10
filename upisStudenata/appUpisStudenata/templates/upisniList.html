@@ -2,17 +2,27 @@
 {% block content %}
 <h1>Upisni List</h1>
 <ul>
-  {% for predmet in predmeti_list %}
-    <li>
-      {{ predmet.name }} - {{ predmet.izborni }}
-      {% if predmet.id in enrolled_predmeti %}
-        (Enrolled)
-      {% else %}
-        (Not Enrolled)
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>No predmeti available.</li>
-  {% endfor %}
+    <p>User Status: {{ user.status }}</p>
+{% for semester in semesters %}
+    <h2>{{ semester }}. Semestar</h2>
+    {% for predmet in predmeti_list %}
+            {% if predmet.semester == semester %}
+                <li>
+                {{ predmet.name }} ({{ predmet.kod }}) ({{ predmet.sem_red }})
+                    {% if predmet.is_enrolled %}
+                        <form action="{% url 'deroll_subject' predmet.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Deroll</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'enroll_subject' predmet.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Enroll</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endif %}
+    {% endfor %}
+{% endfor %}
 </ul>
 {% endblock %}

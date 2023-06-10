@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Korisnik, Predmeti, Upisi
 # Create your views here.
@@ -29,5 +30,45 @@ class UpisniListView(LoginRequiredMixin, ListView):
         user = self.request.user
         enrollments = Upisi.objects.filter(studentId=user)
         enrolled_predmeti = enrollments.values_list('predmetId', flat=True)
-        context['enrolled_predmeti'] = enrolled_predmeti
+
+        predmeti_list = context['predmeti_list']
+        if user.status == 'red':
+            for predmet in predmeti_list:
+                if predmet.pk in enrolled_predmeti and predmet:
+                    predmet.is_enrolled = True
+                    predmet.semester = predmet.sem_red
+                else:
+                    predmet.is_enrolled = False
+                    predmet.semester = predmet.sem_izv
+
+        if user.status == 'red':
+                listSortedPredmeti = sorted(predmeti_list, key=lambda x: x.semester)
+                
+               
+            
+        semesters = set(predmet.semester for predmet in predmeti_list)
+        lsSortedSemesters = sorted(semesters)
+
+        context['semesters'] = lsSortedSemesters
+        context['predmeti_list'] = listSortedPredmeti
         return context
+
+
+
+    
+        
+    
+
+class EnrollSubjectView(View):
+    def post(self, request, pk):
+        predmet = Predmeti.objects.get(pk=pk)
+        Upisi.objects.create(studentId=request.user, predmetId=predmet, status='upisan')
+        return redirect('upisniList')
+
+class DerollSubjectView(View):
+    def post(self, request, pk):
+        Upisi.objects.filter(studentId=request.user, predmetId=pk).delete()
+        return redirect('upisniList')
+    
+
+
