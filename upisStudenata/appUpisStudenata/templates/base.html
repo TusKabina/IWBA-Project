@@ -12,8 +12,12 @@
                 {% if user.role.role == 'STUDENT' %}
                 <li><a href="/logout">Logout</a></li>
                 {% elif user.role.role == 'PROFESSOR' %}
-                    
                 <li><a href="/logout">Logout</a></li>
+                {%elif user.role.role == 'ADMIN' %}
+                <li><a href="/logout">Logout</a></li>
+                <li><a href="{% url 'createPredmet' %}">Create predmet</a></li>
+                <li><a href="{% url 'createUser' %}" class="btn btn-primary">Create user</a></li>
+                <li><a href="{% url 'listStudenti' %}">Lista studenata</a></li>
                 {% endif %}
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>

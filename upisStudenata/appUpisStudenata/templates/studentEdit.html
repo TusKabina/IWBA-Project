@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Edit Student</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+  <a href="" class="btn btn-primary">Uredi upisni list</a>
+  <a href="{% url 'editUpisniList' student.id %}">Edit UpisniList</a>
+  
+{% endblock %}

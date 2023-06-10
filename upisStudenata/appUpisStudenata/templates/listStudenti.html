@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>List of studenti</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime Studenta</th>
+        <th>Status</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in studenti_list %}
+        <tr>
+          <td>{{ student.username }}</td>
+          <td>{{ student.get_status_display }}</td>
+          <td>
+            <a href="{% url 'editStudent' pk=student.pk %}">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
