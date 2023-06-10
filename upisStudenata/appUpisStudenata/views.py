@@ -21,6 +21,7 @@ class Login(LoginView):
 class UpisniListView(LoginRequiredMixin, ListView):
     template_name = 'upisniList.html'
     context_object_name = 'predmeti_list'
+    login_url = '/login/'
 
     def get_queryset(self):
         return Predmeti.objects.all()
@@ -37,6 +38,15 @@ class UpisniListView(LoginRequiredMixin, ListView):
                 if predmet.pk in enrolled_predmeti and predmet:
                     predmet.is_enrolled = True
                     predmet.semester = predmet.sem_red
+                else:
+                    predmet.is_enrolled = False
+        
+                    predmet.semester = predmet.sem_red
+        else:
+            for predmet in predmeti_list:
+                if predmet.pk in enrolled_predmeti and predmet:
+                    predmet.is_enrolled = True
+                    predmet.semester = predmet.sem_izv
                 else:
                     predmet.is_enrolled = False
                     predmet.semester = predmet.sem_izv
