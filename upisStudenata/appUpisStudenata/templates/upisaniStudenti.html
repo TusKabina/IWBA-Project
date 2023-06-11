@@ -6,7 +6,7 @@
         <h2>Predmet: {{ predmet.name }}</h2>
         {% for student in studenti_list %}
             <li>
-                <a href="{% url 'editStudent' pk=student.pk %}">{{ student.username }}</a>  ({{ student.get_status_display }})
+                <a href="{% url 'editStudent' pk=student.pk %}">{{ student.username }}</a>  ({{ student.status }}) ({{ student.statusPredmeta }})
             </li>
         {% endfor %}
     </ul>

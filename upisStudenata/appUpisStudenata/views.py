@@ -250,8 +250,8 @@ class UpisaniStudentiView(LoginRequiredMixin, View):
 
         studenti_list = []
         for student in upisaniStudenti:
-            status = Upisi.objects.filter(studentId=student.id, predmetId=predmet.id).values_list('status', flat=True).first()
-            student.status = status
+            statusPredmeta = Upisi.objects.filter(studentId=student.id, predmetId=predmet.id).values_list('status', flat=True).first()
+            student.statusPredmeta = statusPredmeta
             studenti_list.append((student))
 
         context = {
