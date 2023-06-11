@@ -38,11 +38,9 @@ class UpisniListView(LoginRequiredMixin, ListView):
         student_id = self.kwargs.get('student_id')  # Get the student ID from the URL parameter
         user = self.request.user
         student = get_object_or_404(Korisnik, pk=student_id)
-        if student_id:
-            student_id = self.kwargs.get('student_id')  # Get the student ID from the URL parameter
-            student = get_object_or_404(Korisnik, pk=student_id)
-        else:
+        if not student_id:
             student = user
+            
         
         enrollments = Upisi.objects.filter(studentId=student)
         enrolled_predmeti = enrollments.values_list('predmetId', flat=True)
@@ -55,7 +53,7 @@ class UpisniListView(LoginRequiredMixin, ListView):
                 predmet.is_enrolled = True
                 predmet.semester = predmet.sem_red if user.status == 'red' else predmet.sem_izv
                 try:
-                    enrolled_predmet = enrollments.filter(predmetId=predmet.pk).first()  # Use filter() instead of get() and first() to retrieve the first object
+                    enrolled_predmet = enrollments.filter(predmetId=predmet.pk).first()
                     predmet.status = enrolled_predmet.status
                 except Upisi.DoesNotExist:
                     predmet.status = 'NE RADI' 
@@ -224,6 +222,8 @@ class DerollSubjectView(View):
     def post(self, request, predmet_id, student_id):
         predmet = Predmeti.objects.get(pk=predmet_id)
         student = Korisnik.objects.get(pk=student_id)
+        #status = Upisi.objects.filter(studentId=student, predmetId=predmet).values_list('status', flat=True).first()
+
         Upisi.objects.filter(studentId=student, predmetId=predmet).delete()
         return redirect('upisniList', student_id=student_id)
 
@@ -251,15 +251,25 @@ class UpisaniStudentiView(LoginRequiredMixin, View):
         studenti_list = []
         for student in upisaniStudenti:
             statusPredmeta = Upisi.objects.filter(studentId=student.id, predmetId=predmet.id).values_list('status', flat=True).first()
-            student.statusPredmeta = statusPredmeta
-            studenti_list.append((student))
+            studenti_list.append((student, statusPredmeta))
 
         context = {
             'predmet': predmet,
             'studenti_list': studenti_list
         }
         return render(request, 'upisaniStudenti.html', context)
-    
+
+
+def update_status_predmeta(request, pk, predmet_id):
+    if request.method == 'POST':
+        status_predmeta = request.POST.get('statusPredmeta')
+        student = get_object_or_404(Korisnik, pk=pk)
+        predmet = get_object_or_404(Predmeti, pk=predmet_id)
+        upisi = Upisi.objects.filter(studentId=student, predmetId=predmet)
+        for upis in upisi:
+            upis.status = status_predmeta
+            upis.save()
+    return redirect('upisaniStudenti', predmet_id=predmet_id)
 
 
 class PredmetiProfesoriListView(LoginRequiredMixin, ListView):

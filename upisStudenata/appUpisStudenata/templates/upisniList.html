@@ -9,34 +9,21 @@
             {% for predmet in predmeti_list %}
                 {% if predmet.semester == semester %}
                     <li>
-                        {{ predmet.name }} ({{ predmet.kod }}) ({{ predmet.get_status_display }})
-
-                        {% if predmet.is_enrolled %}
-                            <form action="{% url 'deroll_subject' predmet.pk student.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit">Deroll</button>
-                            </form>
-                        {% else %}
-                            <form action="{% url 'enroll_subject' predmet.pk student.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit">Enroll</button>
-                            </form>
+                        {{ predmet.name }} ({{ predmet.kod }}) ({{ predmet.status }})
+                        {% if predmet.status != "polozen" and predmet.status != "izgubio" %}
+                            {% if predmet.is_enrolled %}
+                                <form action="{% url 'deroll_subject' predmet.pk student.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">Deroll</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'enroll_subject' predmet.pk student.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">Enroll</button>
+                                </form>
+                            {% endif %}
                         {% endif %}
-
-                        <!-- {% if user.is_superuser %}
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <select name="status">
-                                    {% for choice in predmet.status.choices %}
-                                        <option value="{{ choice.0 }}" {% if predmet.status|add:'.'|add:choice.0|yesno:'true,false' %}selected{% endif %}>
-                                            {{ choice.1 }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit">Modify Status</button>
-                            </form>
-                        {% endif %} -->
-                    </li>
+                       
                 {% endif %}
             {% endfor %}
         {% endfor %}

@@ -40,4 +40,5 @@ path('deroll/<int:predmet_id>/<int:student_id>/', DerollSubjectView.as_view(), n
      path('createUser/', UserCreateView.as_view(), name='createUser'),
       path('predmet/<int:predmet_id>/studenti/', UpisaniStudentiView.as_view(), name='upisaniStudenti'),
        path('profesor/predmeti/', PredmetiProfesoriListView.as_view(), name='predmetiProfesora'),
+       path('student/<int:pk>/update-status/<int:predmet_id>/', update_status_predmeta, name='updateStatusPredmeta'),
 ]

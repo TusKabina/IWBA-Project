@@ -2,12 +2,34 @@
 
 {% block content %}
     <h1>Upisani Studenti</h1>
+    <form method="get" action="{% url 'upisaniStudenti' predmet_id=predmet.id %}">
+        <label for="statusFilter">Filter by Status:</label>
+        <select name="statusFilter" id="statusFilter">
+            <option value="" {% if not request.GET.statusFilter %}selected{% endif %}>All</option>
+            <option value="upisan" {% if request.GET.statusFilter == 'upisan' %}selected{% endif %}>Upisan</option>
+            <option value="polozen" {% if request.GET.statusFilter == 'polozen' %}selected{% endif %}>Položen</option>
+            <option value="izgubio" {% if request.GET.statusFilter == 'izgubio' %}selected{% endif %}>Izgubio Potpis</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
     <ul>
-        <h2>Predmet: {{ predmet.name }}</h2>
         {% for student in studenti_list %}
-            <li>
-                <a href="{% url 'editStudent' pk=student.pk %}">{{ student.username }}</a>  ({{ student.status }}) ({{ student.statusPredmeta }})
-            </li>
+            {% if not request.GET.statusFilter or request.GET.statusFilter == 'all' or student.1 == request.GET.statusFilter %}
+                <li>
+                    <a href="{% url 'editStudent' pk=student.0.pk %}">{{ student.0.username }}</a>
+                    ({{ student.0.status }}) ({{ student.1 }})
+                    <form method="post" action="{% url 'updateStatusPredmeta' pk=student.0.pk predmet_id=predmet.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="student_id" value="{{ student.0.pk }}">
+                        <select name="statusPredmeta" id="statusPredmeta">
+                            <option value="upisan" {% if student.0.statusPredmeta == 'upisan' %}selected{% endif %}>Upisan</option>
+                            <option value="polozen" {% if student.0.statusPredmeta == 'polozen' %}selected{% endif %}>Položen</option>
+                            <option value="izgubio" {% if student.0.statusPredmeta == 'izgubio' %}selected{% endif %}>Izgubio Potpis</option>
+                        </select>
+                        <button type="submit">Update Status</button>
+                    </form>
+                </li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}
