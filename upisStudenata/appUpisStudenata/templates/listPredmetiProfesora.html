@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Predmeti List</h1>
+  <ul>
+    {% for predmet in predmeti_list %}
+      <li>
+        <h2><a href="{% url 'upisaniStudenti' predmet_id=predmet.pk %}">{{ predmet.name }}</a></h2>
+        <p>Kod: {{ predmet.kod }}</p>
+        <p>Program: {{ predmet.program }}</p>
+        <p>Ects: {{ predmet.ects }}</p>
+      </li>
+    {% empty %}
+      <li>No Predmeti available.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

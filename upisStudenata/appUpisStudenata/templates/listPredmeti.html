@@ -16,7 +16,9 @@
     <tbody>
       {% for predmet in predmeti_list %}
         <tr>
-          <td>{{ predmet.name }}</td>
+          <td>
+            <a href="{% url 'upisaniStudenti' predmet_id=predmet.pk %}">{{ predmet.name }}</a>
+          </td>
           <td>{{ predmet.kod }}</td>
           <td>{{ predmet.sem_red }}</td>
           <td>{{ predmet.sem_izv }}</td>

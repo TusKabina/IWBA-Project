@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Lista Profesora</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime Profesora</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for profesor in profesori_list %}
+        <tr>
+          <td>{{ profesor.username }}</td>
+          <td>
+            <a href="{% url 'editProfesor' pk=profesor.pk %}">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

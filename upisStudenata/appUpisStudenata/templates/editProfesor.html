@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Uredi Studenta</h1>
+  <h1>Edit Profesor</h1>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save</button>
   </form>
-  <a href="{% url 'upisniList' student.id %}" class="btn btn-primary">Uredi upisni list</a>
-  
+  <a href="" class="btn btn-primary">Uredi upisni list</a>
 {% endblock %}
