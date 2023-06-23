@@ -35,7 +35,7 @@ class UpisniListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        student_id = self.kwargs.get('student_id')  # Get the student ID from the URL parameter
+        student_id = self.kwargs.get('student_id') 
         user = self.request.user
         student = get_object_or_404(Korisnik, pk=student_id)
         if not student_id:
@@ -168,7 +168,7 @@ class ProfesoriUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profesor'] = self.get_object()  # Assuming get_object() retrieves the student object
+        context['profesor'] = self.get_object()
         return context
 
 class UserCreateView(LoginRequiredMixin, View):
@@ -206,7 +206,7 @@ class StudentiUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['student'] = self.get_object()  # Assuming get_object() retrieves the student object
+        context['student'] = self.get_object() 
         return context
     
 
@@ -229,17 +229,17 @@ class DerollSubjectView(View):
 
 
 
-class UpisaniStudentiView(LoginRequiredMixin, View):
-    def get(self, request, predmet_id):
-        predmet = get_object_or_404(Predmeti, pk=predmet_id)
-        upisaniStudenti = Korisnik.objects.filter(student__predmetId=predmet).distinct()
+# class UpisaniStudentiView(LoginRequiredMixin, View):
+#     def get(self, request, predmet_id):
+#         predmet = get_object_or_404(Predmeti, pk=predmet_id)
+#         upisaniStudenti = Korisnik.objects.filter(student__predmetId=predmet).distinct()
         
         
-        context = {
-            'predmet': predmet,
-            'studenti_list': upisaniStudenti
-        }
-        return render(request, 'upisaniStudenti.html', context)
+#         context = {
+#             'predmet': predmet,
+#             'studenti_list': upisaniStudenti
+#         }
+#         return render(request, 'upisaniStudenti.html', context)
     
 
 
@@ -247,7 +247,7 @@ class UpisaniStudentiView(LoginRequiredMixin, View):
     def get(self, request, predmet_id):
         predmet = get_object_or_404(Predmeti, pk=predmet_id)
         upisaniStudenti = Korisnik.objects.filter(student__predmetId=predmet).distinct()
-
+        
         studenti_list = []
         for student in upisaniStudenti:
             statusPredmeta = Upisi.objects.filter(studentId=student.id, predmetId=predmet.id).values_list('status', flat=True).first()
@@ -286,5 +286,4 @@ class PredmetiProfesoriListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        # Filter Predmeti objects where nositelj is the current Profesor
         return Predmeti.objects.filter(nositelj=self.request.user)

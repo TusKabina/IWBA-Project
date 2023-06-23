@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>Upisani Studenti</h1>
+    <h1>{{predmet.name}}</h1>
     <form method="get" action="{% url 'upisaniStudenti' predmet_id=predmet.id %}">
         <label for="statusFilter">Filter by Status:</label>
         <select name="statusFilter" id="statusFilter">

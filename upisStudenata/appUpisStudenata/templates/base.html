@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <title>Moodle</title>
 </head>
 <body>
@@ -10,17 +11,17 @@
         <ul>
             {% if user.is_authenticated %}
                 {% if user.role.role == 'STUDENT' %}
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/logout" class="btn btn-primary">Logout</a></li>
                 {% elif user.role.role == 'PROFESOR' %}
                 <li><a href="{% url 'predmetiProfesora' %}">Lista predmeta</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/logout" class="btn btn-primary">Logout</a></li>
                 {%elif user.role.role == 'ADMIN' %}
-                <li><a href="/logout">Logout</a></li>
-                <li><a href="{% url 'createPredmet' %}">Create predmet</a></li>
+                <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+                <li><a href="{% url 'createPredmet' %}" class="btn btn-primary">Create predmet</a></li>
                 <li><a href="{% url 'createUser' %}" class="btn btn-primary">Create user</a></li>
-                <li><a href="{% url 'listStudenti' %}">Lista studenata</a></li>
-                <li><a href="{% url 'listProfesori' %}">Lista profesora</a></li>
-                <li><a href="{% url 'listPredmeti' %}">Lista predmeta</a></li>
+                <li><a href="{% url 'listStudenti' %}"class="btn btn-primary" >Lista studenata</a></li>
+                <li><a href="{% url 'listProfesori' %}" class="btn btn-primary">Lista profesora</a></li>
+                <li><a href="{% url 'listPredmeti' %}" class="btn btn-primary">Lista predmeta</a></li>
                 {% endif %}
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
