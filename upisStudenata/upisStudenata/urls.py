@@ -31,6 +31,7 @@ urlpatterns = [
     path('enroll/<int:predmet_id>/<int:student_id>/', EnrollSubjectView.as_view(), name='enroll_subject'),
 path('deroll/<int:predmet_id>/<int:student_id>/', DerollSubjectView.as_view(), name='deroll_subject'),
     path('list-predmeti/', PredmetiListView.as_view(), name='listPredmeti'),
+    path('ispit-list-predmeti/', IspitPredmetiListView.as_view(), name='ispitListPredmeti'),
     path('predmeti/<int:pk>/edit/', PredmetiUpdateView.as_view(), name='editPredmeti'),
      path('createPredmet/', PredmetiCreateView.as_view(), name='createPredmet'),
      path('list-studenti/', StudentiListView.as_view(), name='listStudenti'),
@@ -39,6 +40,7 @@ path('deroll/<int:predmet_id>/<int:student_id>/', DerollSubjectView.as_view(), n
     path('profesori/<int:pk>/edit/', ProfesoriUpdateView.as_view(), name='editProfesor'),
      path('createUser/', UserCreateView.as_view(), name='createUser'),
       path('predmet/<int:predmet_id>/studenti/', UpisaniStudentiView.as_view(), name='upisaniStudenti'),
+      path('predmet/<int:predmet_id>/polozeniStudenti/', IspitDetaljiPolozenihStudenata.as_view(), name='ispitPolozeniStudenti'),
        path('profesor/predmeti/', PredmetiProfesoriListView.as_view(), name='predmetiProfesora'),
        path('student/<int:pk>/update-status/<int:predmet_id>/', update_status_predmeta, name='updateStatusPredmeta'),
 ]

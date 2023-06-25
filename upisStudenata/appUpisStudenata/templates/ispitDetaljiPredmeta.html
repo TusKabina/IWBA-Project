@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Detalji predmeta</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime Predmeta</th>
+        <th>Kod</th>
+        <th>Redovni Semestar</th>
+        <th>Izvanredni Semestar</th>
+        <th>Nositelj predmeta</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for predmet in predmeti_list %}
+        <tr>
+          <td>
+            <a href="{% url 'upisaniStudenti' predmet_id=predmet.pk %}">{{ predmet.name }}</a>
+          </td>
+          <td>{{ predmet.kod }}</td>
+          <td>{{ predmet.sem_red }}</td>
+          <td>{{ predmet.sem_izv }}</td>
+          <td>{{ predmet.nositelj }}</td>
+          <td>
+            <a href="{% url 'editPredmeti' pk=predmet.pk %}">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

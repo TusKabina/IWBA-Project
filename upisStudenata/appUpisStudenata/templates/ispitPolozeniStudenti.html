@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Polozeni studenti</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in studenti_list %}
+        <tr>
+          <td>{{ student.username }}</td>
+          <td>{{ student.status }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

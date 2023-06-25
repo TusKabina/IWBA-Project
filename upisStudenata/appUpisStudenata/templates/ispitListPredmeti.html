@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>List of Predmeti</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime</th>
+        <th>Polozeni studenti</th>
+        <th>redovni</th>
+        <th>vanredni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for predmet in predmeti_list %}
+        <tr>
+          <td>{{ predmet.name }}</td>
+          <td>{{ predmet.polozeniStudenti }}</td>
+          <td>{{ predmet.sem_redPolozeni }}</td>
+          <td>{{ predmet.sem_izvPolozeni }}</td>
+          <td>
+            <a href="{% url 'ispitPolozeniStudenti' predmet_id=predmet.pk %}">Vidi popis</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
