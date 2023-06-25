@@ -9,7 +9,12 @@
             {% for predmet in predmeti_list %}
                 {% if predmet.semester == semester %}
                     <li>
-                        {{ predmet.name }} ({{ predmet.kod }}) ({{ predmet.status }})
+                        {{ predmet.name }} ({{ predmet.kod }}) 
+                        {% if predmet.status %}
+                            ({{ predmet.status }})
+                        {% else %}
+                            (Nije Upisan)
+                        {% endif %}
                         {% if predmet.status != "polozen" and predmet.status != "izgubio" %}
                             {% if predmet.is_enrolled %}
                                 <form action="{% url 'deroll_subject' predmet.pk student.id %}" method="post">
