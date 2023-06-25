@@ -147,7 +147,6 @@ class StudentiListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #TODO: Check privileges
         user = self.request.user
         student_role = Role.objects.get(role=Role.STUDENT)
         students = Korisnik.objects.filter(role=student_role)
