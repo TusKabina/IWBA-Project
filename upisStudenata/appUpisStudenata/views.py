@@ -103,11 +103,18 @@ class PredmetiUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'predmetiEdit.html'
     success_url = '/list-predmeti/'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        if request.user.role.role != 'ADMIN':
+            return HttpResponseForbidden("Access Denied")
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        if self.request.user.role != Role.PROFESOR:
-            profesor_role = Role.objects.get(role=Role.PROFESOR)
-            form.fields['nositelj'].queryset = form.fields['nositelj'].queryset.filter(role=profesor_role)
+        profesor_role = Role.objects.get(role=Role.PROFESOR)
+        form.fields['nositelj'].queryset = form.fields['nositelj'].queryset.filter(role=profesor_role)
         return form
 
 class PredmetiCreateView(LoginRequiredMixin, View):
