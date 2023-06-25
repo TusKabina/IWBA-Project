@@ -30,6 +30,14 @@ class UpisniListView(LoginRequiredMixin, ListView):
     context_object_name = 'predmeti_list'
     login_url = '/login/'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        if request.user.role.role != 'ADMIN' and request.user.role.role != 'STUDENT':
+            return HttpResponseForbidden("Access Denied")
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_queryset(self):
         return Predmeti.objects.all()
 
@@ -80,6 +88,9 @@ class PredmetiListView(LoginRequiredMixin, ListView):
     redirect_field_name = 'redirect_to'
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         return super().dispatch(request, *args, **kwargs)
@@ -103,6 +114,9 @@ class PredmetiCreateView(LoginRequiredMixin, View):
      login_url = '/login/'
      redirect_field_name = 'redirect_to'
      def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         form = PredmetForm()
@@ -123,6 +137,9 @@ class StudentiListView(LoginRequiredMixin, ListView):
     redirect_field_name = 'redirect_to'
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         return super().dispatch(request, *args, **kwargs)
@@ -146,6 +163,9 @@ class ProfesoriListView(LoginRequiredMixin, ListView):
     redirect_field_name = 'redirect_to'
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         return super().dispatch(request, *args, **kwargs)
@@ -153,7 +173,6 @@ class ProfesoriListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #TODO: Check privileges
         user = self.request.user
         profesorRole = Role.objects.get(role=Role.PROFESOR)
         profesors = Korisnik.objects.filter(role=profesorRole)
@@ -166,6 +185,14 @@ class ProfesoriUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'editProfesor.html'
     success_url = '/list-profesori/'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        if request.user.role.role != 'ADMIN':
+            return HttpResponseForbidden("Access Denied")
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profesor'] = self.get_object()
@@ -200,6 +227,9 @@ class StudentiUpdateView(LoginRequiredMixin, UpdateView):
     success_url = '/list-studenti/'
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         return super().dispatch(request, *args, **kwargs)
@@ -211,7 +241,7 @@ class StudentiUpdateView(LoginRequiredMixin, UpdateView):
     
 
 
-class EnrollSubjectView(View):
+class EnrollSubjectView(View): 
     def post(self, request, predmet_id, student_id):
         predmet = Predmeti.objects.get(pk=predmet_id)
         student = Korisnik.objects.get(pk=student_id)
@@ -222,25 +252,10 @@ class DerollSubjectView(View):
     def post(self, request, predmet_id, student_id):
         predmet = Predmeti.objects.get(pk=predmet_id)
         student = Korisnik.objects.get(pk=student_id)
-        #status = Upisi.objects.filter(studentId=student, predmetId=predmet).values_list('status', flat=True).first()
 
         Upisi.objects.filter(studentId=student, predmetId=predmet).delete()
         return redirect('upisniList', student_id=student_id)
 
-
-
-# class UpisaniStudentiView(LoginRequiredMixin, View):
-#     def get(self, request, predmet_id):
-#         predmet = get_object_or_404(Predmeti, pk=predmet_id)
-#         upisaniStudenti = Korisnik.objects.filter(student__predmetId=predmet).distinct()
-        
-        
-#         context = {
-#             'predmet': predmet,
-#             'studenti_list': upisaniStudenti
-#         }
-#         return render(request, 'upisaniStudenti.html', context)
-    
 
 
 class UpisaniStudentiView(LoginRequiredMixin, View):
