@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 class PredmetForm(forms.ModelForm):
     class Meta:
         model = Predmeti
-        fields = ['name', 'kod', 'program','ects','sem_red', 'sem_izv', 'izborni','nositelj']
+        fields = ['name', 'kod', 'program','ects','sem_red', 'sem_izv', 'izborni','nositelj','program']
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -9,7 +9,7 @@
             {% for predmet in predmeti_list %}
                 {% if predmet.semester == semester %}
                     <li>
-                        {{ predmet.name }} ({{ predmet.kod }}) 
+                        {{ predmet.name }} ({{ predmet.kod }}) ({{ predmet.ects }}) 
                         {% if predmet.status %}
                             ({{ predmet.status }})
                         {% else %}
@@ -28,9 +28,10 @@
                                 </form>
                             {% endif %}
                         {% endif %}
-                       
                 {% endif %}
             {% endfor %}
         {% endfor %}
+        <h2>Osvojeni ECTS: {{ osvojeniECTS }}</h2>
+        <h2>Upisani ECTS: {{ sveukupniECTS }}</h2>
     </ul>
 {% endblock %}

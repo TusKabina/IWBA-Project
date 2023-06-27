@@ -9,6 +9,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Sum
 # Create your views here.
 
 
@@ -52,7 +53,7 @@ class UpisniListView(LoginRequiredMixin, ListView):
         
         enrollments = Upisi.objects.filter(studentId=student)
         enrolled_predmeti = enrollments.values_list('predmetId', flat=True)
-
+        
         predmeti_list = context['predmeti_list']
         
 
@@ -69,13 +70,17 @@ class UpisniListView(LoginRequiredMixin, ListView):
                 predmet.is_enrolled = False
                 predmet.semester = predmet.sem_red if user.status == 'red' else predmet.sem_izv
 
+        
         listSortedPredmeti = sorted(predmeti_list, key=lambda x: x.semester)
         semesters = set(predmet.semester for predmet in predmeti_list)
         lsSortedSemesters = sorted(semesters)
-
+        osvojeniECTS = Predmeti.objects.filter(predmet__studentId = student,predmet__status='polozen').aggregate(osvojeniECTS = Sum("ects"))
+        sveukupniECTS = Predmeti.objects.filter(predmet__studentId=student,predmet__status = 'upisan').aggregate(sveukupniECTS = Sum("ects"))
         context['semesters'] = lsSortedSemesters
         context['predmeti_list'] = listSortedPredmeti
         context['student'] = student
+        context['osvojeniECTS'] = osvojeniECTS['osvojeniECTS']
+        context['sveukupniECTS'] = sveukupniECTS["sveukupniECTS"]
         return context
 
 
@@ -151,15 +156,30 @@ class ispitDetaljiPredmeta(LoginRequiredMixin, View):
 
 class PredmetiUpdateView(LoginRequiredMixin, UpdateView):
     model = Predmeti
-    fields = ['name', 'kod', 'sem_red', 'sem_izv', 'ects', 'nositelj']
+    fields = ['name', 'kod', 'sem_red', 'sem_izv', 'ects', 'nositelj','program']
     template_name = 'predmetiEdit.html'
     success_url = '/list-predmeti/'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        if request.user.role.role != 'ADMIN' and request.user.role.role != 'PROFESOR':
+            return HttpResponseForbidden("Access Denied")
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        if self.request.user.role != Role.PROFESOR:
-            profesor_role = Role.objects.get(role=Role.PROFESOR)
-            form.fields['nositelj'].queryset = form.fields['nositelj'].queryset.filter(role=profesor_role)
+        profesor_role = Role.objects.get(role=Role.PROFESOR)
+        form.fields['nositelj'].queryset = form.fields['nositelj'].queryset.filter(role=profesor_role)
+        if self.request.user.role.role == 'PROFESOR':
+            del form.fields["name"]
+            del form.fields["kod"]
+            del form.fields["sem_red"]
+            del form.fields["sem_izv"]
+            del form.fields["ects"]
+            del form.fields["nositelj"]
+
         return form
 
 class PredmetiCreateView(LoginRequiredMixin, View):

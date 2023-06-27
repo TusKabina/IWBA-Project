@@ -7,7 +7,7 @@
       <li>
         <h2><a href="{% url 'upisaniStudenti' predmet_id=predmet.pk %}">{{ predmet.name }}</a></h2>
         <p>Kod: {{ predmet.kod }}</p>
-        <p>Program: {{ predmet.program }}</p>
+        <p><a href="{% url 'editPredmeti' pk=predmet.pk %}">Program: </a>{{ predmet.program }}</p>
         <p>Ects: {{ predmet.ects }}</p>
       </li>
     {% empty %}
