@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Lista predmeta</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Ime Predmeta</th>
+        <th>Kod</th>
+        <th>Redovni Semestar</th>
+        <th>Izvanredni Semestar</th>
+        <th>Nositelj predmeta</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for predmet in predmeti_list %}
+        <tr>
+          <td>
+          <td>{{ predmet.name }}</td>
+          <td>{{ predmet.polozeno}}</td>
+          <td>{{ predmet.red }}</td>
+          <td>{{ predmet.izv }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -101,9 +101,69 @@ class PredmetiListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
     
 
-class IspitPredmetiListView(LoginRequiredMixin, ListView):
+# class IspitPredmetiListView(LoginRequiredMixin, ListView):
+#     model = Predmeti
+#     template_name = 'ispitListPredmeti.html'
+#     context_object_name = 'predmeti_list'
+#     login_url = '/login/'
+#     redirect_field_name = 'redirect_to'
+
+#     def dispatch(self, request, *args, **kwargs):
+#         if not request.user.is_authenticated:
+#             return redirect('login')
+        
+#         if request.user.role.role != 'ADMIN' and request.user.role.role != 'PROFESOR':
+#             return HttpResponseForbidden("Access Denied")
+#         return super().dispatch(request, *args, **kwargs)
+    
+#     def get_queryset(self):
+#         return Predmeti.objects.all()
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         predmeti_list = context['predmeti_list']
+            
+#         for predmet in predmeti_list:
+#             polozeniStudenti = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen").count()
+#             sem_redPolozeni = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen",studentId__status = 'red').count()
+#             sem_izvPolozeni = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen",studentId__status = 'izv').count()
+#             predmet.polozeniStudenti = polozeniStudenti
+#             predmet.sem_redPolozeni = sem_redPolozeni
+#             predmet.sem_izvPolozeni = sem_izvPolozeni
+
+#         context['predmeti_list'] = predmeti_list
+
+#         return context
+    
+# class IspitDetaljiPolozenihStudenata(LoginRequiredMixin, View):
+#      def get(self, request, predmet_id):
+#         predmet = get_object_or_404(Predmeti, pk=predmet_id)
+#         polozeniStudenti = Korisnik.objects.filter(student__predmetId=predmet,student__status = 'polozen').distinct()
+        
+#         context = {
+#             'predmet': predmet,
+#             'studenti_list': polozeniStudenti
+#         }
+#         return render(request, 'ispitPolozeniStudenti.html', context)
+
+# class ispitDetaljiPredmeta(LoginRequiredMixin, View):
+#     def get(self, request, predmet_id):
+#         predmet = get_object_or_404(Predmeti, pk=predmet_id)
+#         context = {
+#             'predmet': predmet,
+#         }
+#         return render(request, 'ispitPolozeniStudenti.html', context)
+
+
+
+
+
+
+
+
+class IspitListaPredmeta(LoginRequiredMixin, ListView):
     model = Predmeti
-    template_name = 'ispitListPredmeti.html'
+    template_name = 'ispitListaPredmeta.html'
     context_object_name = 'predmeti_list'
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
@@ -112,47 +172,47 @@ class IspitPredmetiListView(LoginRequiredMixin, ListView):
         if not request.user.is_authenticated:
             return redirect('login')
         
-        if request.user.role.role != 'ADMIN' and request.user.role.role != 'PROFESOR':
+        if request.user.role.role != 'ADMIN':
             return HttpResponseForbidden("Access Denied")
         return super().dispatch(request, *args, **kwargs)
-    
+
+
     def get_queryset(self):
         return Predmeti.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         predmeti_list = context['predmeti_list']
-            
+
         for predmet in predmeti_list:
-            polozeniStudenti = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen").count()
-            sem_redPolozeni = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen",studentId__status = 'red').count()
-            sem_izvPolozeni = Upisi.objects.filter(predmetId__name = predmet.name,status = "polozen",studentId__status = 'izv').count()
-            predmet.polozeniStudenti = polozeniStudenti
-            predmet.sem_redPolozeni = sem_redPolozeni
-            predmet.sem_izvPolozeni = sem_izvPolozeni
+            sveukupnoPolozeni = Upisi.objects.filter(predmetId = predmet, status='polozen').count()
+            polozeniRed = Upisi.objects.filter(predmetId = predmet, studentId__status = 'red', status ='polozen').count()
+            izv = Upisi.objects.filter(predmetId = predmet, studentId__status = 'izv', status = 'polozen').count()
+            predmet.polozeno = sveukupnoPolozeni
+            predmet.red = polozeniRed
 
         context['predmeti_list'] = predmeti_list
-
         return context
-    
-class IspitDetaljiPolozenihStudenata(LoginRequiredMixin, View):
-     def get(self, request, predmet_id):
-        predmet = get_object_or_404(Predmeti, pk=predmet_id)
-        polozeniStudenti = Korisnik.objects.filter(student__predmetId=predmet,student__status = 'polozen').distinct()
-        
-        context = {
-            'predmet': predmet,
-            'studenti_list': polozeniStudenti
-        }
-        return render(request, 'ispitPolozeniStudenti.html', context)
 
-class ispitDetaljiPredmeta(LoginRequiredMixin, View):
-    def get(self, request, predmet_id):
-        predmet = get_object_or_404(Predmeti, pk=predmet_id)
-        context = {
-            'predmet': predmet,
-        }
-        return render(request, 'ispitPolozeniStudenti.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class PredmetiUpdateView(LoginRequiredMixin, UpdateView):
     model = Predmeti
